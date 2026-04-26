@@ -7,17 +7,23 @@ export class obj_file {
    */
   constructor(path) {
     this.path = path;
+    /** @type {Number[]} */
     this.verticies = [];
     this.faces = [];
     this.pos = new vec3(0,0,0);
     this.rot = new vec3(0,0,0);
   }
+  static empty() {
+    return new obj_file(undefined);
+  }
 
-  async parse() {
-    if (this.is_parsed) return;
-    const response = await fetch(this.path);
-    const text = await response.text();
-    for (let line of text.split("\n")) {
+  async parse(source = undefined) {
+    if (this.is_parsed || (source == undefined && this.path == undefined)) return;
+    if (source == undefined) {
+      const response = await fetch(this.path);
+      source = await response.text();
+    }
+    for (let line of source.split("\n")) {
       let trimmed = line.trimStart();
       if (trimmed.startsWith("#")) continue; // Comment
       let tokens = multiSplit(trimmed); // Remove even double spaces
@@ -68,13 +74,19 @@ export class obj_file {
     triangle.push(Number(formatted[2].split("/")[0]) - 1);
     this.faces.push(triangle);
   }
-  async parseVerticies() {
+  async getVerticies() {
     await this.parse();
     return this.verticies;
   }
-  async parseFaces() {
+  async getFaces() {
     await this.parse();
     return this.faces;
+  }
+  async scaleModel(s) {
+    await this.parse();
+    for (let i = 0; i < this.verticies.length; i++) {
+      this.verticies[i] *= s;
+    }
   }
   
 }

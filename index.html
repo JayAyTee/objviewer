@@ -7,7 +7,15 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <p id="fps_counter">FPS: </p>
+  <div class="settings">
+    <label for="obj-file">.obj file:</label>
+    <input type="file" name="obj-file" id="obj-file" accept=".obj">
+    <br>
+    <label for="fov-slider">FOV:</label>
+    <input type="range" name="fov-slider" id="fov-slider" min="60" max="120" value="90">
+    <p id="fps_counter">FPS: </p>
+    <button id="use_example_monkey">Use example monkey!</button>
+  </div>
   <canvas id="viewport" width="800" height="600"></canvas>
   <script type="module" src="main.js"></script>
 </body>

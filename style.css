@@ -9,3 +9,7 @@ body {
   height: 100vh;
   flex-direction: column;
 }
+.settings {
+  width: 800px;
+  border: 1px solid;
+}

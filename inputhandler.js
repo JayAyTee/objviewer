@@ -1,4 +1,4 @@
-import { vec2 } from "./structs.js";
+import { cam, vec2, vec3 } from "./structs.js";
 
 let pressedKeys = [];
 let mouseMovement = new vec2(0, 0);
@@ -55,4 +55,34 @@ export function getMouseMovement() {
   mouseMovement.x = 0;
   mouseMovement.y = 0;
   return m;
+}
+
+/** 
+ * @param {cam} camera 
+ * @param {Number} deltaTime 
+ */
+export function tickInput(deltaTime, camera) {
+  const moveSpeed = 20 * deltaTime;
+  const mouse_sensitivity = 100 * deltaTime;
+  if (isPressed("a") || isPressed("arrowleft")) {
+    camera.addPosition(vec3.getNormalizedVectorFromRotation(-camera.yaw - 90, 0).multiply(moveSpeed));
+  }
+  if (isPressed("d") || isPressed("arrowright")) {
+    camera.addPosition(vec3.getNormalizedVectorFromRotation(-camera.yaw + 90, 0).multiply(moveSpeed));
+  }
+  if (isPressed("w") || isPressed("arrowup")) {
+    camera.addPosition(vec3.getNormalizedVectorFromRotation(-camera.yaw, camera.pitch).multiply(moveSpeed));
+  }
+  if (isPressed("s") || isPressed("arrowdown")) {
+    camera.subPosition(vec3.getNormalizedVectorFromRotation(-camera.yaw, camera.pitch).multiply(moveSpeed));
+  }
+  if (isPressed("e")) {
+    camera.y += moveSpeed;
+  }
+  if (isPressed("q")) {
+    camera.y -= moveSpeed;
+  }
+  let movement = getMouseMovement();
+  camera.yaw -= mouse_sensitivity * movement.x * deltaTime;
+  camera.pitch = Math.max(-90,Math.min(90,camera.pitch - mouse_sensitivity * movement.y * deltaTime));
 }
